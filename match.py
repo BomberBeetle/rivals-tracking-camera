@@ -12,15 +12,11 @@ mask = cv.cvtColor(mask, cv.COLOR_BGR2GRAY)
 def getMatches(frame):
 
     frame = cv.resize(frame, (960, 540), interpolation=cv.INTER_NEAREST)
-    frame = frame[40:500,:]
+    frame = frame[20:500,:]
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     match =cv.matchTemplate(frame_gray, template, cv.TM_CCORR_NORMED, mask)
     cv.imshow('a', match)
-    minVal,maxVal,minLoc,maxLoc  = cv.minMaxLoc(match)
-    pos = None
-    if(maxVal >= 0.6):
-       pos = maxLoc
 
     #if(minVal_p1 <= 530000):
     #    p1pos = minLoc_p1
