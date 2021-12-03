@@ -1,21 +1,31 @@
 import cv2 as cv
 import numpy as np
 
-template = cv.imread('template_p1.png')
-template = cv.resize(template, (7,6), interpolation=cv.INTER_NEAREST)
-template = cv.cvtColor(template, cv.COLOR_BGR2HSV)
+template = cv.imread('template_percent.png')
+#template = cv.resize(template, (template.shape[0]//2, template.shape[1]//2), interpolation=cv.INTER_NEAREST)
+template = cv.cvtColor(template, cv.COLOR_BGR2GRAY) 
 
-mask = cv.imread('mask.png')
-mask = cv.resize(mask, (7,6), interpolation=cv.INTER_NEAREST)
+mask = cv.imread('template_percent_mask.png')
+#mask = cv.resize(mask, (mask.shape[0]//2, mask.shape[1]//2), interpolation=cv.INTER_NEAREST)
+mask = cv.cvtColor(mask, cv.COLOR_BGR2GRAY) 
 
+def getMatches(frame):
 
-def getPlayerMatches(frame):
-    frame = cv.resize(frame, (480, 270), interpolation=cv.INTER_NEAREST)
-    frame = frame[40:230, 40:440]
-    frame = cv.cvtColor(frame, cv.COLOR_BGR2HSV)
-    match =cv.matchTemplate(frame, template, cv.TM_CCORR_NORMED, mask)
-    _,maxVal,_,maxLoc  = cv.minMaxLoc(match)
-    print(maxVal)
+    frame = cv.resize(frame, (960, 540), interpolation=cv.INTER_NEAREST)
+    frame = frame[40:500,:]
+    frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+
+    match =cv.matchTemplate(frame_gray, template, cv.TM_CCORR_NORMED, mask)
+    cv.imshow('a', match)
+    minVal,maxVal,minLoc,maxLoc  = cv.minMaxLoc(match)
+    pos = None
     if(maxVal >= 0.6):
-        cv.circle(match, maxLoc, 5,255 ,-1)
-    return match    
+       pos = maxLoc
+
+    #if(minVal_p1 <= 530000):
+    #    p1pos = minLoc_p1
+
+    #if(minVal_p2 <= 530000):
+    #    p2pos = minLoc_p2
+
+    return (np.where(match >= 0.6))
