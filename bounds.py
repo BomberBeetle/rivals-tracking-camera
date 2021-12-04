@@ -1,6 +1,6 @@
 extendD = 300
-extendL = 200
-extendR = 200
+extendL = 100
+extendR = 100
 extendU  = 100
 
 alphaPos = 0.90
@@ -40,6 +40,21 @@ def getBoundingBox(points):
     else:
         height = (width/16)*9
 
+    if(width > 960):
+        width = 960
+    if(height > 540):
+            height = 540
+
+    if(pos[0] < 0):
+        pos = (0, pos[1])
+    elif(pos[0]+width > 960):
+        pos =  (960 - width, pos[1])
+
+    if(pos[1] < 0):
+        pos = (pos[0],0)
+    elif(pos[1] + height > 540):
+        pos =  (pos[0],540-height)
+
     return BoundingBox(pos, width, height)
 
 def interpolateBoxes(a, b):
@@ -48,7 +63,6 @@ def interpolateBoxes(a, b):
     return BoundingBox((a.pos[0]*alphaPos+b.pos[0]*betaPos , a.pos[1]*alphaPos+b.pos[1]*betaPos) , width, height)
 
 def roundCoords(box):
-    print(box)
     (x, y) = box.pos
     box.pos = (int(round(x)), int(round(y)))
     box.height = round(box.height)

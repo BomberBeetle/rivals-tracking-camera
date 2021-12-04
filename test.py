@@ -4,18 +4,19 @@ import bounds
 import numpy as np
 
 fn = 0
-capture = cv.VideoCapture('r2r.mp4')
+capture = cv.VideoCapture('clip.mp4')
 bBox = bounds.BoundingBox((0,0), 960, 540)
 bBox_target = bounds.BoundingBox((0,0), 960, 540)
 bBox_prev = None
 
-crop_top = 20
+crop_top = 0
 crop_bottom = 50
 
 while capture.isOpened():
     fn +=1
-    _, frame = capture.read()
-
+    out, frame = capture.read()
+    if(not out):
+        break
     points = match.getMatches(frame, crop_top, crop_bottom)
     points = np.column_stack(points)
     frame = cv.resize(frame, (960, 540), interpolation=cv.INTER_NEAREST)
@@ -25,22 +26,6 @@ while capture.isOpened():
             cv.circle(frame, (x,y+40), 5, (0,0,255), 2)
 
         bBox_target = bounds.getBoundingBox(points)
-
-        if(bBox_target.width > 960):
-            bBox_target.width = 960
-        if(bBox_target.height > 540):
-            bBox_target.height = 540
-
-        if(bBox_target.pos[0] < 0):
-            bBox_target.pos = (0, bBox_target.pos[1])
-        elif(bBox_target.pos[0]+bBox_target.width > 960):
-            bBox_target.pos =  (960 - bBox_target.width, bBox_target.pos[1])
-
-        if(bBox_target.pos[1] < 0):
-            bBox_target.pos = (bBox_target.pos[0],0)
-        elif(bBox_target.pos[1] + bBox_target.height > 540):
-            bBox_target.pos =  (bBox_target.pos[0],540-bBox_target.height)
-
     
     bBox = bounds.interpolateBoxes(bBox, bBox_target)
 
