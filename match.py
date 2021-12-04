@@ -9,10 +9,10 @@ mask = cv.imread('template_percent_mask.png')
 #mask = cv.resize(mask, (mask.shape[0]//2, mask.shape[1]//2), interpolation=cv.INTER_NEAREST)
 mask = cv.cvtColor(mask, cv.COLOR_BGR2GRAY) 
 
-def getMatches(frame):
+def getMatches(frame, crop_top=0, crop_bottom=60):
 
     frame = cv.resize(frame, (960, 540), interpolation=cv.INTER_NEAREST)
-    frame = frame[20:500,:]
+    frame = frame[crop_top:540-crop_bottom,:]
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
     match =cv.matchTemplate(frame_gray, template, cv.TM_CCORR_NORMED, mask)

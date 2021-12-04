@@ -3,8 +3,11 @@ extendL = 200
 extendR = 200
 extendU  = 100
 
-alpha = 0.92
-beta = 1-alpha
+alphaPos = 0.90
+betaPos = 1-alphaPos
+
+alphaScale = 0.90
+betaScale = 1-alphaScale
 
 
 class BoundingBox:
@@ -40,7 +43,9 @@ def getBoundingBox(points):
     return BoundingBox(pos, width, height)
 
 def interpolateBoxes(a, b):
-    return BoundingBox(((a.pos[0]*alpha+b.pos[0]*beta) , (a.pos[1]*alpha+b.pos[1]*beta)), (a.width*alpha+b.width*beta), (a.height*alpha+b.height*beta))
+    width = a.width*alphaScale+b.width*betaScale
+    height = (width/16)*9
+    return BoundingBox((a.pos[0]*alphaPos+b.pos[0]*betaPos , a.pos[1]*alphaPos+b.pos[1]*betaPos) , width, height)
 
 def roundCoords(box):
     print(box)
