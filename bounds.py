@@ -19,7 +19,7 @@ class BoundingBox:
 def getBoundingBox(points):
     maxY, maxX = 0,0
     minY, minX = 999999,999999
-    for (y, x) in points:
+    for (y, x, _) in points:
         if x > maxX:
             maxX = x
         if x < minX:
@@ -64,7 +64,7 @@ def interpolateBoxes(a, b):
 
 def roundCoords(box):
     (x, y) = box.pos
-    box.pos = (int(round(x)), int(round(y)))
-    box.height = round(box.height)
-    box.width = round(box.width)
-    return box
+    pos = (int(round(x)), int(round(y)))
+    height = round(box.height)
+    width = round(box.width)
+    return BoundingBox(pos, width, height)
