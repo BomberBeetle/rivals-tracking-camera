@@ -1,7 +1,7 @@
-extendD = 150
-extendL = 100
-extendR = 100
-extendU  = 100
+extendD = 200
+extendL = 50
+extendR = 50
+extendU  = 50
 
 alphaPos = 0.90
 betaPos = 1-alphaPos
