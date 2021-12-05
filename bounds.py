@@ -32,16 +32,23 @@ def getBoundingBox(points):
     posX = minX - extendL
     posY = minY - extendU
 
+    midX = (minX+maxX) / 2
+    midY = (minY+maxY) / 2
+
     width = maxX - minX +extendL +extendR
 
     height = maxY - minY + extendU+ extendD
 
+    ratioX = (midX - posX)/width
+    ratioY = (midY - posY)/height
+
     if height/9 > width/16 :
         width = (height/9)*16
-        posX -= (height/9)*16/2
+        posX -= (height/9)*16*ratioX/2
     else:
         height = (width/16)*9
-        posY -= (width/16)*9/2
+        posY -= (width/16)*9*ratioY/2
+
 
 
     if(width > 960):

@@ -5,7 +5,7 @@ import numpy as np
 import filter_and_thresh as pfilter
 import sys
 
-captureStr = 'muito_ruim.mp4'
+captureStr = 'hitstun.mp4'
 fn = 0
 
 bBox = bounds.BoundingBox((0,0), 960, 540)
