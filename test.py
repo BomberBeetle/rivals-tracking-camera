@@ -3,14 +3,21 @@ import match
 import bounds
 import numpy as np
 import filter_and_thresh as pfilter
+import sys
 
+captureStr = 'muito_ruim.mp4'
 fn = 0
-capture = cv.VideoCapture('clip.mp4')
+
 bBox = bounds.BoundingBox((0,0), 960, 540)
 bBox_target = bounds.BoundingBox((0,0), 960, 540)
 points = np.empty((0,3))
 
-crop_top = 40
+#if(len(sys.argv) > 0):
+#    captureStr = sys.argv[0]
+
+capture = cv.VideoCapture(captureStr)
+
+crop_top = 20
 crop_bottom = 50
 crop_sides = 20
 

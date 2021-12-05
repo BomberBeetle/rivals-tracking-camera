@@ -1,4 +1,4 @@
-extendD = 300
+extendD = 150
 extendL = 100
 extendR = 100
 extendU  = 100
@@ -29,33 +29,37 @@ def getBoundingBox(points):
         if y < minY:
             minY = y
 
-    pos = (minX - extendL, minY - extendU)
+    posX = minX - extendL
+    posY = minY - extendU
 
-    width = maxX - minX + extendR
+    width = maxX - minX +extendL +extendR
 
-    height = maxY - minY + extendD
+    height = maxY - minY + extendU+ extendD
 
-    if height > width :
+    if height/9 > width/16 :
         width = (height/9)*16
+        posX -= (height/9)*16/2
     else:
         height = (width/16)*9
+        posY -= (width/16)*9/2
+
 
     if(width > 960):
         width = 960
     if(height > 540):
             height = 540
 
-    if(pos[0] < 0):
-        pos = (0, pos[1])
-    elif(pos[0]+width > 960):
-        pos =  (960 - width, pos[1])
+    if(posX < 0):
+        posX = 0
+    elif(posX+width > 960):
+        posX =  960 - width
 
-    if(pos[1] < 0):
-        pos = (pos[0],0)
-    elif(pos[1] + height > 540):
-        pos =  (pos[0],540-height)
+    if(posY < 0):
+        posY = 0
+    elif(posY + height > 540):
+        posY =  540-height
 
-    return BoundingBox(pos, width, height)
+    return BoundingBox((posX, posY), width, height)
 
 def interpolateBoxes(a, b):
     width = a.width*alphaScale+b.width*betaScale
