@@ -1,45 +1,75 @@
 import cv2 as cv
 import match
 import bounds
-import numpy as np
 import filter_and_thresh as pfilter
 import sys
 
-captureStr = 'roubo.mp4'
-fn = 0
+import numpy as np
+cimport numpy as np
+np.import_array()
 
-bBox = bounds.BoundingBox((0,0), 960, 540)
-bBox_target = bounds.BoundingBox((0,0), 960, 540)
-points = np.empty((0,3))
+cdef extern from "bounding_boxes.h":
+    struct f_BoundingBox:
+        float pos[2]
+        float width
+        float height
+        
+    struct i_BoundingBox:
+        int pos[2]
+        int width
+        int height
+
+captureStr = 'roubo.mp4'
+
+#bBox = bounds.BoundingBox((0,0), 960, 540)
+cdef f_BoundingBox bBox
+bBox.pos = [0,0]
+bBox.width = 960
+bBox.height = 540
+
+cdef f_BoundingBox bBox_target
+bBox_target.pos = [0,0]
+bBox_target.width = 960
+bBox_target.height = 540
+
+cdef i_BoundingBox bBoxRounded
+
+cdef np.ndarray points = np.empty((0,3))
 
 #if(len(sys.argv) > 0):
 #    captureStr = sys.argv[0]
 
 capture = cv.VideoCapture(captureStr)
 
-crop_top = 20
-crop_bottom = 50
-crop_sides = 20
+cdef int crop_top = 20
+cdef int crop_bottom = 50
+cdef int crop_sides = 20
+
+cdef (int, int) recStart 
+cdef (int, int) recEnd
+
+cdef np.ndarray new_points
+cdef np.ndarray frame
+cdef np.ndarray npoints_tresh
+
 
 while capture.isOpened():
-    fn +=1
     out, frame = capture.read()
     if(not out):
         break
     new_points = match.getMatches(frame, crop_top, crop_bottom, crop_sides)
-    new_points = np.column_stack(new_points)
     npoints_tresh = np.array([[1.0] for _ in range(new_points.shape[0]) ])
     new_points = np.column_stack((new_points, npoints_tresh))
     points = np.concatenate((points, new_points), axis=0)
-    points = pfilter.filter_points_and_apply_threshold(points, 1/10, 0)
+    points = pfilter.filter_points_and_apply_threshold(points, 0.1)
     
     frame = cv.resize(frame, (960, 540), interpolation=cv.INTER_NEAREST)
     #frame_d = frame.copy()
     
-    if(len(points) > 0):
-        for (y, x, _) in points:
-            y = int(y)
-            x = int(x)
+    if(points.shape[0] > 0):
+        #for (y, x, _) in points:
+            #y = int(y)
+            #x = int(x)
             #cv.circle(frame_d, (x,y+40), 5, (0,0,255), 2)
 
         bBox_target = bounds.getBoundingBox(points)
@@ -56,7 +86,7 @@ while capture.isOpened():
     recEnd = (bBoxRounded.pos[0]+bBoxRounded.width+crop_sides, bBoxRounded.pos[1]+bBoxRounded.height+crop_top)
 
     #cv.rectangle(frame_d, recStart, recEnd, (0,255,255), 1)
-    
+
     cv.imshow('cringe tracker', cv.resize(frame[recStart[1]:recEnd[1],recStart[0]:recEnd[0]], (960,540)))
     #cv.imshow('debug', cv.resize(frame_d, (960,540)))
     

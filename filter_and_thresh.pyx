@@ -1,8 +1,12 @@
 import numpy as np
+cimport numpy as np
+np.import_array()
 
-def filter_points_and_apply_threshold(points, thresh_decay, supression_radius):
+cpdef np.ndarray filter_points_and_apply_threshold(points: np.ndarray, thresh_decay: float):
 
-    points_threshd = np.copy(points)
+    print(thresh_decay)
+
+    cdef np.ndarray points_threshd = np.copy(points)
 
     for i in reversed(range(points.shape[0])):
         points_threshd[i][2] -= thresh_decay
