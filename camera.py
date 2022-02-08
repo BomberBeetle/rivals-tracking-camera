@@ -24,7 +24,7 @@ def track_stdin():
         for i in range(0, 540):
             for j in range(0, 960):
                 for k in range(0, 3):
-                    frame_array[i][j][k] = os.read(0, 1)
+                    frame_array[i][j][k] =  int(os.read(0, 1))
                 #unbuffered reading because fuck you
         track_frame(frame_array)
 
