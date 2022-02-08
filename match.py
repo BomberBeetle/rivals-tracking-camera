@@ -1,11 +1,12 @@
 import cv2 as cv
 import numpy as np
+import os
 
-template = cv.imread('template_percent.png')
+template = cv.imread(os.path.dirname(__file__) + '/template_percent.png')
 #template = cv.resize(template, (template.shape[0]//2, template.shape[1]//2), interpolation=cv.INTER_NEAREST)
 template = cv.cvtColor(template, cv.COLOR_BGR2GRAY) 
 
-mask = cv.imread('template_percent_mask.png')
+mask = cv.imread(os.path.dirname(__file__) + '/template_percent_mask.png')
 #mask = cv.resize(mask, (mask.shape[0]//2, mask.shape[1]//2), interpolation=cv.INTER_NEAREST)
 mask = cv.cvtColor(mask, cv.COLOR_BGR2GRAY) 
 
